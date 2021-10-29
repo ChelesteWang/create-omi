@@ -1,8 +1,8 @@
-const test = { name: 'test', value: 'test a' }
-const admin = { name: 'admin', value: 'admin aa' }
-const vite = { name: 'vite', value: 'vite asd' }
-const components = { name: 'components', value: 'components' }
+const vite = { name: 'vite', value: 'vite' }
+const component = { name: 'component', value: 'component' }
+const app = { name: 'app', value: 'app' }
+const appTs = { name: 'app-ts', value: 'app-ts' }
 
-const TEMPLATES = [test, admin, vite, components]
+const TEMPLATES = [vite, component, app, appTs]
 
 module.exports = { TEMPLATES }
