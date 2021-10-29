@@ -72,7 +72,23 @@ async function chooseTemplate() {
 }
 
 async function copyTemplate() {
-
+    const files = fs.readdirSync(templateDir)
+    const write = (file, content) => {
+        const targetPath = renameFiles[file]
+            ? path.join(root, renameFiles[file])
+            : path.join(root, file)
+        if (content) {
+            fs.writeFileSync(targetPath, content)
+        } else {
+            copy(path.join(templateDir, file), targetPath)
+        }
+    }
+    for (const file of files.filter((f) => f !== 'package.json')) {
+        write(file)
+    }
+    const pkg = require(path.join(templateDir, `package.json`))
+    pkg.name = path.basename(root)
+    write('package.json', JSON.stringify(pkg, null, 2))
 }
 
 async function installDependencies(root) {
