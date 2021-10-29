@@ -4,4 +4,4 @@ const components = 'components:'
 
 const TEMPLATES = [admin, vite, components]
 
-module.exports = TEMPLATES
+module.exports = { TEMPLATES }
