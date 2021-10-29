@@ -3,20 +3,16 @@ const path = require('path')
 const argv = require('minimist')(process.argv.slice(2))
 const { prompt } = require('enquirer')
 
-const {
-    yellow,
-    green,
-    red
-} = require('kolorist')
+const { log, error, success, info } = require('./log')
 
 const renameFiles = {
     _gitignore: '.gitignore'
 }
 
 const TEMPLATES = [
-    'admin',
-    'vite',
-    'components'
+    'admin:',
+    'vite: ',
+    'components: '
 ]
 
 const cwd = process.cwd()
@@ -33,7 +29,7 @@ async function init() {
         })
         targetDir = name
     } else {
-        console.log(green(`your project will created in ${path.join(cwd, targetDir)}`))
+        success(`your project will created in ${path.join(cwd, targetDir)}`)
     }
     const root = path.join(cwd, targetDir)
     if (!fs.existsSync(root)) {
@@ -51,7 +47,7 @@ async function init() {
         })
         if (yes) {
             // emptyDir(root)
-            console.log(root)
+            log(root)
         } else {
             return
         }
@@ -59,9 +55,9 @@ async function init() {
 
     }
     initTemplate()
-        .catch((error) => { console.error(error) })
+        .catch((err) => { error(err) })
         .then(() => { installDependencies(root) })
-        .then(() => console.log(yellow(`Scaffolding project in ${root}...`)))
+        .then(() => info(`Scaffolding project in ${root}...`))
 }
 
 async function initTemplate() {
@@ -73,22 +69,24 @@ async function initTemplate() {
             message: "Select a template:",
             choices: TEMPLATES
         })
-        template = yellow(t)
+        template = t
         const templateDir = path.join(__dirname, `template-${template}`)
+    } else {
+        success(`your project will created in ${path.join(cwd, targetDir)}`)
     }
 }
 
 async function installDependencies(root) {
-    console.log(`\nDone. Now run:\n`)
+    log(`\nDone. Now run:\n`)
     if (root !== cwd) {
-        console.log(`cd ${path.relative(cwd, root)}`)
+        log(`cd ${path.relative(cwd, root)}`)
     }
-    console.log(`npm install (or \`yarn\`)`)
-    console.log(`npm run dev (or \`yarn dev\`)`)
+    log(`npm install (or \`yarn\`)`)
+    log(`npm run dev (or \`yarn dev\`)`)
 }
 
-init().catch((error) => {
-    console.error(error)
+init().catch((err) => {
+    error(err)
 })
 
 function copyDir(srcDir, destDir) {
