@@ -4,16 +4,11 @@ const argv = require('minimist')(process.argv.slice(2))
 const { prompt } = require('enquirer')
 
 const { log, error, success, info } = require('./log')
+const TEMPLATES = require('./templates')
 
 const renameFiles = {
     _gitignore: '.gitignore'
 }
-
-const TEMPLATES = [
-    'admin:',
-    'vite: ',
-    'components: '
-]
 
 const cwd = process.cwd()
 let targetDir = argv._[0]
