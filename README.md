@@ -5,17 +5,30 @@
 ### install
 
 ```shell
-npm install -g omi-cli/cli
+npm install -g @yuqing521/omi-cli
 
 ```
 
 ### use
+```json
+"bin": {
+    "omi-test": "./index.js",
+    "omi-create-test": "./index.js"
+  },
+```
+**no option**
 
 ```shell
-omi-create [project name] -t omi-admin
+omi-test
 ```
 
-### configure option
+**with option**
+
+```shell
+omi-create-test [project name] -t vite
+```
+
+## configure option
 
 workdir: [project name]
 Template: -template / -t
