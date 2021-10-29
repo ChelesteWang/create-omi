@@ -8,7 +8,15 @@
 npm install -g omi-cli/cli
 
 ```
+
+### use
+
+```shell
+omi-create omi-project -t omi-admin
+```
+
 ### configure option
 
 workdir: 
+
 Template: -template / -t
