@@ -135,7 +135,7 @@ async function installDependencies(root, packageManager) {
             }
             log(`npm install (or \`yarn\`)`)
         }
-        log(`\nnpm run dev (or \`yarn dev\`)`)
+        log(`\nnpm run dev (or \`yarn start\`)`)
         success(`\nThe project has been created in ${root}\n`)
     })
 }
@@ -143,4 +143,3 @@ async function installDependencies(root, packageManager) {
 init().catch((err) => {
     error(err)
 })
-
