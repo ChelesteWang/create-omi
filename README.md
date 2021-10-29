@@ -32,3 +32,7 @@ omi-create-test [project name] -t vite
 
 workdir: [project name]
 Template: -template / -t
+
+# License
+
+This content is released under the [MIT](http://opensource.org/licenses/MIT) License.
