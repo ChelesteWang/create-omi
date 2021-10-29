@@ -4,7 +4,7 @@ const argv = require('minimist')(process.argv.slice(2))
 const { prompt } = require('enquirer')
 
 const { log, error, success, info } = require('./log')
-const TEMPLATES = require('./templates')
+const { TEMPLATES } = require('./templates')
 
 const renameFiles = {
     _gitignore: '.gitignore'
@@ -46,18 +46,17 @@ async function init() {
         } else {
             return
         }
-    } else {
-
     }
-    initTemplate()
-        .catch((err) => { error(err) })
+    chooseTemplate()
+        .then(() => { copyTemplate() })
         .then(() => { installDependencies(root) })
         .then(() => info(`Scaffolding project in ${root}...`))
+        .catch((err) => { error(err) })
 }
 
-async function initTemplate() {
+async function chooseTemplate() {
     let template = argv.t || argv.template
-    if (!template) {
+    if (!template || !TEMPLATES.includes(template)) {
         const { t } = await prompt({
             type: "select",
             name: "t",
@@ -65,10 +64,15 @@ async function initTemplate() {
             choices: TEMPLATES
         })
         template = t
-        const templateDir = path.join(__dirname, `template-${template}`)
+        const templateDir = path.join(__dirname, `template/${template}`)
     } else {
-        success(`your project will created in ${path.join(cwd, targetDir)}`)
+        log(`Template will choose ${template}`)
     }
+    success(`your project will created in ${path.join(cwd, targetDir)}`)
+}
+
+async function copyTemplate() {
+
 }
 
 async function installDependencies(root) {
