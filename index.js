@@ -49,17 +49,14 @@ async function init() {
             return
         }
     }
-    const { packageManager } = await prompt({
-        type: 'select',
-        name: 'packageManager',
-        initial: 'npm',
-        choices: ['npm', 'yarn', 'pnpm'],
-        message:
-            `Select a package manager`
-    })
+
     chooseTemplate(root)
-        .then((res) => { copyTemplate(res) })
-        .then(() => {
+        .then(async (res) => {
+            const packageManager = await choosePackageManager()
+            copyTemplate(res)
+            return packageManager
+        })
+        .then((packageManager) => {
             installDependencies(root, packageManager).then(() => {
             })
         })
@@ -69,6 +66,9 @@ async function init() {
 async function chooseTemplate(root) {
     let template = argv.t || argv.template
     if (!template || !TEMPLATES.includes(template)) {
+        if (!TEMPLATES.includes(template)) {
+            info("The selected template was not found")
+        }
         const { t } = await prompt({
             type: "select",
             name: "t",
@@ -80,8 +80,20 @@ async function chooseTemplate(root) {
         log(`Template will choose ${template}`)
     }
     const templateDir = path.join(__dirname, `template/${template}`)
-    success(`your project will created in ${path.join(cwd, targetDir)}`)
+    success(`your project will created ${template} in ${path.join(cwd, targetDir)}`)
     return { templateDir, root }
+}
+
+async function choosePackageManager() {
+    const { packageManager } = await prompt({
+        type: 'select',
+        name: 'packageManager',
+        initial: 'npm',
+        choices: ['npm', 'yarn', 'pnpm'],
+        message:
+            `Select a package manager`
+    })
+    return packageManager
 }
 
 async function copyTemplate({ templateDir, root }) {
@@ -110,7 +122,7 @@ async function installDependencies(root, packageManager) {
         name: 'yes',
         initial: 'Y',
         message:
-            `Whether to install dependencies now`
+            `Whether to install dependencies now\n`
     }).then((isInstall) => {
         if (isInstall) {
             shell.cd(`${path.relative(cwd, root)}`);
