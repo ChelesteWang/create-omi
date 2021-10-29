@@ -1,9 +1,9 @@
 {
-  "name": "omi-cli",
+  "name": "@yuqing521/omi-cli",
   "version": "2.0.0",
   "bin": {
-    "omi": "./index.js",
-    "omi-create": "./index.js"
+    "omi-test": "./index.js",
+    "omi-create-test": "./index.js"
   },
   "main": "index.js",
   "license": "MIT",
