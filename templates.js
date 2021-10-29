@@ -1,7 +1,19 @@
-const vite = { name: 'vite', value: 'vite' }
-const component = { name: 'component', value: 'component' }
-const app = { name: 'app', value: 'app' }
-const appTs = { name: 'app-ts', value: 'app-ts' }
+const vite = {
+    name: 'vite',
+    message: 'Initialize a new omi project with vite'
+};
+const component = {
+    name: 'component',
+    message: 'Initialize a new omi component'
+}
+const app = {
+    name: 'app',
+    message: 'Initialize a new omi application'
+}
+const appTs = {
+    name: 'app-ts',
+    message: 'Initialize a new omi project with typescript'
+}
 
 const TEMPLATES = [vite, component, app, appTs]
 
