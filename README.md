@@ -28,7 +28,7 @@ omi-test
 omi-create-test [project name] -t vite
 ```
 
-### configure option
+## configure option
 
 workdir: [project name]
 Template: -template / -t
