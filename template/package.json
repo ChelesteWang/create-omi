@@ -1,7 +1,10 @@
 {
   "name": "omi-vite",
   "version": "1.0.0",
-  "bin": "./index.js",
+  "bin": {
+    "omi": "./index.js",
+    "omi-create": "./index.js"
+  },
   "main": "index.js",
   "license": "MIT",
   "scripts": {
