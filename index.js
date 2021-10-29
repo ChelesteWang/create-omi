@@ -43,7 +43,7 @@ async function init() {
                 `Remove existing files and continue?`
         })
         if (yes) {
-            // emptyDir(root)
+            emptyDir(root)
             log(root)
         } else {
             return
