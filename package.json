@@ -1,7 +1,10 @@
 {
   "name": "omi-vite",
   "version": "1.0.0",
-  "bin": "./index.js",
+  "bin": {
+    "omi": "./index.js",
+    "omi-create": "./index.js"
+  },
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -10,6 +13,7 @@
   "dependencies": {
     "enquirer": "^2.3.6",
     "kolorist": "^1.5.0",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "shelljs": "^0.8.4"
   }
 }

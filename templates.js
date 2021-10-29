@@ -1,7 +1,7 @@
-const test = 'test:'
-const admin = 'admin:'
-const vite = 'vite:'
-const components = 'components:'
+const test = { name: 'test:', value: 'test' }
+const admin = { name: 'admin', value: 'admin' }
+const vite = { name: 'vite:', value: 'vite' }
+const components = { name: 'components:', value: 'components' }
 
 const TEMPLATES = [test, admin, vite, components]
 

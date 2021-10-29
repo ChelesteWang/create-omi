@@ -5,6 +5,7 @@ const { prompt } = require('enquirer')
 
 const { log, error, success, info } = require('./log')
 const { TEMPLATES } = require('./templates')
+const { emptyDir, copy, copyDir } = require('./utils')
 
 const renameFiles = {
     _gitignore: '.gitignore'
@@ -47,14 +48,25 @@ async function init() {
             return
         }
     }
-    chooseTemplate()
-        .then(() => { copyTemplate() })
-        .then(() => { installDependencies(root) })
-        .then(() => info(`Scaffolding project in ${root}...`))
+    const { packageManager } = await prompt({
+        type: 'select',
+        name: 'packageManager',
+        initial: 'npm',
+        choices: ['npm', 'yarn', 'pnpm'],
+        message:
+            `Select a package manager`
+    })
+    chooseTemplate(root)
+        .then((res) => { copyTemplate(res) })
+        .then(() => { installDependencies(root, packageManager) })
+        .then(() => {
+            log(`npm run dev (or \`yarn dev\`)`)
+            success(`The project has been created in ${root}`)
+        })
         .catch((err) => { error(err) })
 }
 
-async function chooseTemplate() {
+async function chooseTemplate(root) {
     let template = argv.t || argv.template
     if (!template || !TEMPLATES.includes(template)) {
         const { t } = await prompt({
@@ -64,14 +76,15 @@ async function chooseTemplate() {
             choices: TEMPLATES
         })
         template = t
-        const templateDir = path.join(__dirname, `template/${template}`)
     } else {
         log(`Template will choose ${template}`)
     }
+    const templateDir = path.join(__dirname, `template/${template}`)
     success(`your project will created in ${path.join(cwd, targetDir)}`)
+    return { templateDir, root }
 }
 
-async function copyTemplate() {
+async function copyTemplate({ templateDir, root }) {
     const files = fs.readdirSync(templateDir)
     const write = (file, content) => {
         const targetPath = renameFiles[file]
@@ -91,49 +104,26 @@ async function copyTemplate() {
     write('package.json', JSON.stringify(pkg, null, 2))
 }
 
-async function installDependencies(root) {
-    log(`\nDone. Now run:\n`)
-    if (root !== cwd) {
-        log(`cd ${path.relative(cwd, root)}`)
+async function installDependencies(root, packageManager) {
+    const { isInstall } = await prompt({
+        type: 'confirm',
+        name: 'yes',
+        initial: 'Y',
+        message:
+            `Whether to install dependencies now`
+    })
+    if (isInstall) {
+
+    } else {
+        log(`\nDone. Now run:\n`)
+        if (root !== cwd) {
+            log(`cd ${path.relative(cwd, root)}`)
+        }
+        log(`npm install (or \`yarn\`)`)
     }
-    log(`npm install (or \`yarn\`)`)
-    log(`npm run dev (or \`yarn dev\`)`)
 }
 
 init().catch((err) => {
     error(err)
 })
-
-function copyDir(srcDir, destDir) {
-    fs.mkdirSync(destDir, { recursive: true })
-    for (const file of fs.readdirSync(srcDir)) {
-        const srcFile = path.resolve(srcDir, file)
-        const destFile = path.resolve(destDir, file)
-        copy(srcFile, destFile)
-    }
-}
-
-function copy(src, dest) {
-    const stat = fs.statSync(src)
-    if (stat.isDirectory()) {
-        copyDir(src, dest)
-    } else {
-        fs.copyFileSync(src, dest)
-    }
-}
-
-function emptyDir(dir) {
-    if (!fs.existsSync(dir)) {
-        return
-    }
-    for (const file of fs.readdirSync(dir)) {
-        const abs = path.resolve(dir, file)
-        if (fs.lstatSync(abs).isDirectory()) {
-            emptyDir(abs)
-            fs.rmdirSync(abs)
-        } else {
-            fs.unlinkSync(abs)
-        }
-    }
-}
 
