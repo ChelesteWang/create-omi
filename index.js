@@ -120,7 +120,7 @@ async function copyTemplate({ templateDir, root }) {
 async function installDependencies(root, packageManager) {
     prompt({
         type: 'confirm',
-        name: 'yes',
+        name: 'isInstall',
         initial: 'Y',
         message:
             `Whether to install dependencies now\n`
