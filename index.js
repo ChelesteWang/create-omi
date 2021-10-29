@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const argv = require('minimist')(process.argv.slice(2))
 const { prompt } = require('enquirer')
+const shell = require('shelljs');
 
 const { log, error, success, info } = require('./log')
 const { TEMPLATES } = require('./templates')
@@ -58,10 +59,9 @@ async function init() {
     })
     chooseTemplate(root)
         .then((res) => { copyTemplate(res) })
-        .then(() => { installDependencies(root, packageManager) })
         .then(() => {
-            log(`npm run dev (or \`yarn dev\`)`)
-            success(`The project has been created in ${root}`)
+            installDependencies(root, packageManager).then(() => {
+            })
         })
         .catch((err) => { error(err) })
 }
@@ -105,22 +105,26 @@ async function copyTemplate({ templateDir, root }) {
 }
 
 async function installDependencies(root, packageManager) {
-    const { isInstall } = await prompt({
+    prompt({
         type: 'confirm',
         name: 'yes',
         initial: 'Y',
         message:
             `Whether to install dependencies now`
-    })
-    if (isInstall) {
-
-    } else {
-        log(`\nDone. Now run:\n`)
-        if (root !== cwd) {
-            log(`cd ${path.relative(cwd, root)}`)
+    }).then((isInstall) => {
+        if (isInstall) {
+            shell.cd(`${path.relative(cwd, root)}`);
+            shell.exec(`${packageManager} install`)
+        } else {
+            log(`\nDone. Now run:\n`)
+            if (root !== cwd) {
+                log(`cd ${path.relative(cwd, root)}`)
+            }
+            log(`npm install (or \`yarn\`)`)
         }
-        log(`npm install (or \`yarn\`)`)
-    }
+        log(`\nnpm run dev (or \`yarn dev\`)`)
+        success(`\nThe project has been created in ${root}\n`)
+    })
 }
 
 init().catch((err) => {
