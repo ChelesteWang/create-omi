@@ -5,7 +5,7 @@
 ### install
 
 ```shell
-npm install -g omi-cli/cli
+npm install -g @yuqing521/omi-cli
 
 ```
 
