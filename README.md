@@ -25,7 +25,7 @@ omi-test
 **with option**
 
 ```shell
-omi-create-test [project name] -t omi-admin
+omi-create-test [project name] -t vite
 ```
 
 ### configure option
