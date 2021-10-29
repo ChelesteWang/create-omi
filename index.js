@@ -21,18 +21,21 @@ const TEMPLATES = [
 
 const cwd = process.cwd()
 let targetDir = argv._[0]
+const defaultProjectName = !targetDir ? 'omi-project' : targetDir
 
 async function init() {
-    let root = path.join(cwd, targetDir || '')
     if (!targetDir) {
         const { name } = await prompt({
             type: "input",
             name: "name",
             message: "Project name:",
-            initial: "omi-project"
+            initial: defaultProjectName
         })
         targetDir = name
+    } else {
+        console.log(green(`your project will created in ${path.join(cwd, targetDir)}`))
     }
+    const root = path.join(cwd, targetDir)
     if (!fs.existsSync(root)) {
         fs.mkdirSync(root, { recursive: true })
     }
@@ -47,14 +50,18 @@ async function init() {
                 `Remove existing files and continue?`
         })
         if (yes) {
-            emptyDir(root)
+            // emptyDir(root)
+            console.log(root)
         } else {
             return
         }
+    } else {
+
     }
-    initTemplate().catch((error) => { console.err(error) })
-    installDependencies()
-    console.log(`Scaffolding project in ${root}...`)
+    initTemplate()
+        .catch((error) => { console.error(error) })
+        .then(() => { installDependencies(root) })
+        .then(() => console.log(yellow(`Scaffolding project in ${root}...`)))
 }
 
 async function initTemplate() {
@@ -66,12 +73,12 @@ async function initTemplate() {
             message: "Select a template:",
             choices: TEMPLATES
         })
-        template = stripColors(t)
+        template = yellow(t)
         const templateDir = path.join(__dirname, `template-${template}`)
     }
 }
 
-function installDependencies() {
+async function installDependencies(root) {
     console.log(`\nDone. Now run:\n`)
     if (root !== cwd) {
         console.log(`cd ${path.relative(cwd, root)}`)
