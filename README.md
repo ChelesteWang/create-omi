@@ -1,4 +1,6 @@
-# OMi CLi 2.0 - Modern Omi command-line interface
+# create-omi 
+
+**OMI CLi 2.0 - Modern Omi command-line interface**
 
 ## Quick Start
 
